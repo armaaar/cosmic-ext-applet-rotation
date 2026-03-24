@@ -42,13 +42,6 @@ cargo binstall -y cargo-deny
 # Used by the release workflow to produce installable packages.
 cargo binstall -y cargo-deb
 
-# --- Python tools -------------------------------------------------------------
-
-# Spec-kit: toolkit for spec-driven development with AI coding agents.
-# Provides structured workflow (specify -> plan -> tasks -> implement).
-# https://github.com/github/spec-kit
-uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
-
 # --- Initial build cache ------------------------------------------------------
 
 # Run an initial build to populate the target directory with correct permissions.
