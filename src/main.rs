@@ -3,8 +3,6 @@
 mod app;
 mod config;
 mod i18n;
-mod rotation;
-mod sensor;
 
 fn main() -> cosmic::iced::Result {
     let requested_languages = i18n_embed::DesktopLanguageRequester::requested_languages();
