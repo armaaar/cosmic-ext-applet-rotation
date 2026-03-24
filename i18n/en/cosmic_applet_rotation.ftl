@@ -5,3 +5,4 @@ left-up = Left
 right-up = Right
 bottom-up = Inverted
 sensor-unavailable = No accelerometer detected
+display-unavailable = No internal display detected

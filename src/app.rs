@@ -109,13 +109,16 @@ impl cosmic::Application for AppModel {
             Orientation::BottomUp => fl!("bottom-up"),
         };
 
+        let toggler = if self.sensor_available && self.display_name.is_some() {
+            widget::toggler(self.config.auto_rotate).on_toggle(Message::ToggleAutoRotate)
+        } else {
+            widget::toggler(self.config.auto_rotate)
+        };
+
         let mut content_list = widget::list_column()
             .padding(5)
             .spacing(0)
-            .add(widget::settings::item(
-                fl!("auto-rotate"),
-                widget::toggler(self.config.auto_rotate).on_toggle(Message::ToggleAutoRotate),
-            ))
+            .add(widget::settings::item(fl!("auto-rotate"), toggler))
             .add(widget::settings::item(
                 fl!("orientation"),
                 widget::text(orientation_label),
@@ -123,6 +126,10 @@ impl cosmic::Application for AppModel {
 
         if !self.sensor_available {
             content_list = content_list.add(widget::text(fl!("sensor-unavailable")));
+        }
+
+        if self.display_name.is_none() {
+            content_list = content_list.add(widget::text(fl!("display-unavailable")));
         }
 
         self.core.applet.popup_container(content_list).into()

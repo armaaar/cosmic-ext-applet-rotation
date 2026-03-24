@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-#![allow(dead_code)]
-
 use cosmic::iced::Subscription;
 use cosmic::iced_futures::stream;
 use futures_util::StreamExt;
+use std::time::Duration;
 
 #[zbus::proxy(
     interface = "net.hadess.SensorProxy",
@@ -41,65 +40,88 @@ fn sensor_stream() -> impl futures_util::Stream<Item = SensorEvent> {
     stream::channel(16, async |mut output| {
         use futures_util::SinkExt;
 
-        let connection = match zbus::Connection::system().await {
-            Ok(c) => c,
-            Err(_) => {
-                let _ = output.send(SensorEvent::Unavailable).await;
-                return;
+        const MAX_RETRIES: u32 = 5;
+        const BASE_BACKOFF_MS: u64 = 500;
+
+        for attempt in 0..MAX_RETRIES {
+            if attempt > 0 {
+                let delay = Duration::from_millis(BASE_BACKOFF_MS * (1 << (attempt - 1)));
+                tokio::time::sleep(delay).await;
             }
-        };
 
-        let proxy = match SensorProxyProxy::new(&connection).await {
-            Ok(p) => p,
-            Err(_) => {
-                let _ = output.send(SensorEvent::Unavailable).await;
-                return;
-            }
-        };
+            let connection = match zbus::Connection::system().await {
+                Ok(c) => c,
+                Err(e) => {
+                    tracing::warn!("sensor: D-Bus connection failed (attempt {attempt}): {e}");
+                    continue;
+                }
+            };
 
-        match proxy.has_accelerometer().await {
-            Ok(true) => {}
-            _ => {
-                let _ = output.send(SensorEvent::Unavailable).await;
-                return;
-            }
-        }
+            let proxy = match SensorProxyProxy::new(&connection).await {
+                Ok(p) => p,
+                Err(e) => {
+                    tracing::warn!("sensor: proxy creation failed (attempt {attempt}): {e}");
+                    continue;
+                }
+            };
 
-        if proxy.claim_accelerometer().await.is_err() {
-            let _ = output.send(SensorEvent::Unavailable).await;
-            return;
-        }
-
-        match proxy.accelerometer_orientation().await {
-            Ok(initial) => {
-                let _ = output.send(SensorEvent::OrientationChanged(initial)).await;
-            }
-            Err(_) => {
-                let _ = output.send(SensorEvent::Unavailable).await;
-                return;
-            }
-        }
-
-        let mut changes = proxy.receive_accelerometer_orientation_changed().await;
-
-        loop {
-            match changes.next().await {
-                Some(change) => match change.get().await {
-                    Ok(orientation) => {
-                        let _ = output
-                            .send(SensorEvent::OrientationChanged(orientation))
-                            .await;
-                    }
-                    Err(_) => {
-                        let _ = output.send(SensorEvent::Unavailable).await;
-                        return;
-                    }
-                },
-                None => {
+            match proxy.has_accelerometer().await {
+                Ok(true) => {}
+                Ok(false) => {
+                    tracing::warn!("sensor: no accelerometer detected");
                     let _ = output.send(SensorEvent::Unavailable).await;
                     return;
                 }
+                Err(e) => {
+                    tracing::warn!(
+                        "sensor: has_accelerometer check failed (attempt {attempt}): {e}"
+                    );
+                    continue;
+                }
+            }
+
+            if let Err(e) = proxy.claim_accelerometer().await {
+                tracing::warn!("sensor: claim_accelerometer failed (attempt {attempt}): {e}");
+                continue;
+            }
+
+            let initial = match proxy.accelerometer_orientation().await {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::warn!(
+                        "sensor: read initial orientation failed (attempt {attempt}): {e}"
+                    );
+                    continue;
+                }
+            };
+            let _ = output.send(SensorEvent::OrientationChanged(initial)).await;
+
+            let mut changes = proxy.receive_accelerometer_orientation_changed().await;
+
+            loop {
+                match changes.next().await {
+                    Some(change) => match change.get().await {
+                        Ok(orientation) => {
+                            let _ = output
+                                .send(SensorEvent::OrientationChanged(orientation))
+                                .await;
+                        }
+                        Err(e) => {
+                            tracing::warn!("sensor: failed to read orientation change: {e}");
+                            let _ = output.send(SensorEvent::Unavailable).await;
+                            return;
+                        }
+                    },
+                    None => {
+                        tracing::warn!("sensor: orientation change stream ended");
+                        let _ = output.send(SensorEvent::Unavailable).await;
+                        return;
+                    }
+                }
             }
         }
+
+        tracing::warn!("sensor: exhausted retries, sensor unavailable");
+        let _ = output.send(SensorEvent::Unavailable).await;
     })
 }

@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-#![allow(dead_code)]
-
 use std::process::{Command, Output};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -44,9 +42,19 @@ impl Orientation {
 }
 
 pub fn detect_display() -> Option<String> {
-    let output = Command::new("wlr-randr").output().ok()?;
+    let output = match Command::new("wlr-randr").output() {
+        Ok(o) => o,
+        Err(e) => {
+            tracing::warn!("wlr-randr not available: {e}");
+            return None;
+        }
+    };
     let stdout = String::from_utf8_lossy(&output.stdout);
-    parse_display_name(&stdout)
+    let name = parse_display_name(&stdout);
+    if name.is_none() {
+        tracing::warn!("no eDP display found in wlr-randr output");
+    }
+    name
 }
 
 pub fn parse_display_name(output: &str) -> Option<String> {
@@ -59,14 +67,28 @@ pub fn parse_display_name(output: &str) -> Option<String> {
 }
 
 pub fn apply_rotation(display: &str, orientation: Orientation) -> std::io::Result<Output> {
-    Command::new("wlr-randr")
+    let result = Command::new("wlr-randr")
         .args([
             "--output",
             display,
             "--transform",
             orientation.to_wlr_transform(),
         ])
-        .output()
+        .output();
+    match &result {
+        Ok(out) if !out.status.success() => {
+            tracing::warn!(
+                "wlr-randr exited with status {}: {}",
+                out.status,
+                String::from_utf8_lossy(&out.stderr)
+            );
+        }
+        Err(e) => {
+            tracing::warn!("failed to run wlr-randr: {e}");
+        }
+        _ => {}
+    }
+    result
 }
 
 #[cfg(test)]

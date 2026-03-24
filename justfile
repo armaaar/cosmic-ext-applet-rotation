@@ -38,6 +38,10 @@ quality:
     cargo test --all
     cargo deny check licenses advisories
 
+# Run integration tests (requires real hardware + Wayland session)
+test-integration:
+    cargo test -- --ignored
+
 # Install files
 install:
     install -Dm0755 {{ cargo-target-dir / 'release' / name }} {{bin-dst}}
