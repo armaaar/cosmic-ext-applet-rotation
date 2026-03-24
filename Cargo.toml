@@ -1,0 +1,42 @@
+[package]
+name = "cosmic-applet-rotation"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-only"
+description = "COSMIC panel applet for automatic screen rotation on devices with accelerometers"
+repository = "https://github.com/ArmaaanS/cosmic-applet-rotation"
+
+[dependencies]
+futures-util = "0.3"
+i18n-embed-fl = "0.10"
+rust-embed = "8"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+zbus = { version = "5", default-features = false, features = ["tokio"] }
+
+[dependencies.i18n-embed]
+version = "0.16"
+features = ["fluent-system", "desktop-requester"]
+
+[dependencies.libcosmic]
+git = "https://github.com/pop-os/libcosmic.git"
+features = [
+    "applet",
+    "applet-token",
+    "dbus-config",
+    "multi-window",
+    "tokio",
+    "wayland",
+    "winit",
+]
+
+[package.metadata.deb]
+maintainer = "ArmaaanS"
+copyright = "2026, ArmaaanS"
+depends = "iio-sensor-proxy, wlr-randr"
+section = "x11"
+priority = "optional"
+assets = [
+    ["target/release/cosmic-applet-rotation", "usr/bin/", "755"],
+    ["resources/app.desktop", "usr/share/applications/com.github.armaaans.CosmicAppletRotation.desktop", "644"],
+]
