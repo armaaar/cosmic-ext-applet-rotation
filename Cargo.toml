@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 license = "GPL-3.0-only"
 description = "COSMIC panel applet for automatic screen rotation on devices with accelerometers"
-repository = "https://github.com/ArmaaanS/cosmic-applet-rotation"
+repository = "https://github.com/armaaar/cosmic-applet-rotation"
 
 [dependencies]
 futures-util = "0.3"
@@ -31,12 +31,12 @@ features = [
 ]
 
 [package.metadata.deb]
-maintainer = "ArmaaanS"
-copyright = "2026, ArmaaanS"
+maintainer = "armaaar"
+copyright = "2026, armaaar"
 depends = "iio-sensor-proxy, wlr-randr"
 section = "x11"
 priority = "optional"
 assets = [
     ["target/release/cosmic-applet-rotation", "usr/bin/", "755"],
-    ["resources/app.desktop", "usr/share/applications/com.github.armaaans.CosmicAppletRotation.desktop", "644"],
+    ["resources/app.desktop", "usr/share/applications/com.github.armaaar.CosmicAppletRotation.desktop", "644"],
 ]

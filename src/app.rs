@@ -48,7 +48,7 @@ impl cosmic::Application for AppModel {
     type Flags = ();
     type Message = Message;
 
-    const APP_ID: &'static str = "com.github.armaaans.CosmicAppletRotation";
+    const APP_ID: &'static str = "com.github.armaaar.CosmicAppletRotation";
 
     fn core(&self) -> &cosmic::Core {
         &self.core

@@ -1,5 +1,5 @@
 name := 'cosmic-applet-rotation'
-appid := 'com.github.armaaans.CosmicAppletRotation'
+appid := 'com.github.armaaar.CosmicAppletRotation'
 
 rootdir := ''
 prefix := '/usr'
