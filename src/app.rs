@@ -2,6 +2,8 @@
 
 use crate::config::Config;
 use crate::fl;
+use crate::rotation::{self, Orientation};
+use crate::sensor::{self, SensorEvent};
 use cosmic::cosmic_config::{self, CosmicConfigEntry};
 use cosmic::iced::{window::Id, Limits, Subscription};
 use cosmic::iced_winit::commands::popup::{destroy_popup, get_popup};
@@ -9,11 +11,26 @@ use cosmic::prelude::*;
 use cosmic::widget;
 
 /// Application state for the rotation applet.
-#[derive(Default)]
 pub struct AppModel {
     core: cosmic::Core,
     popup: Option<Id>,
     config: Config,
+    orientation: Orientation,
+    sensor_available: bool,
+    display_name: Option<String>,
+}
+
+impl Default for AppModel {
+    fn default() -> Self {
+        Self {
+            core: cosmic::Core::default(),
+            popup: None,
+            config: Config::default(),
+            orientation: Orientation::default(),
+            sensor_available: true,
+            display_name: None,
+        }
+    }
 }
 
 /// Messages emitted by the applet.
@@ -23,6 +40,7 @@ pub enum Message {
     PopupClosed(Id),
     UpdateConfig(Config),
     ToggleAutoRotate(bool),
+    SensorEvent(SensorEvent),
 }
 
 impl cosmic::Application for AppModel {
@@ -51,9 +69,14 @@ impl cosmic::Application for AppModel {
             })
             .unwrap_or_default();
 
+        let display_name = rotation::detect_display();
+
         let app = AppModel {
             core,
             config,
+            orientation: Orientation::default(),
+            sensor_available: true,
+            display_name,
             ..Default::default()
         };
 
@@ -79,22 +102,43 @@ impl cosmic::Application for AppModel {
     }
 
     fn view_window(&self, _id: Id) -> Element<'_, Self::Message> {
-        let content_list = widget::list_column()
+        let orientation_label = match self.orientation {
+            Orientation::Normal => fl!("normal"),
+            Orientation::LeftUp => fl!("left-up"),
+            Orientation::RightUp => fl!("right-up"),
+            Orientation::BottomUp => fl!("bottom-up"),
+        };
+
+        let mut content_list = widget::list_column()
             .padding(5)
             .spacing(0)
             .add(widget::settings::item(
                 fl!("auto-rotate"),
                 widget::toggler(self.config.auto_rotate).on_toggle(Message::ToggleAutoRotate),
+            ))
+            .add(widget::settings::item(
+                fl!("orientation"),
+                widget::text(orientation_label),
             ));
+
+        if !self.sensor_available {
+            content_list = content_list.add(widget::text(fl!("sensor-unavailable")));
+        }
 
         self.core.applet.popup_container(content_list).into()
     }
 
     fn subscription(&self) -> Subscription<Self::Message> {
-        Subscription::batch(vec![self
+        let mut subscriptions = vec![self
             .core()
             .watch_config::<Config>(Self::APP_ID)
-            .map(|update| Message::UpdateConfig(update.config))])
+            .map(|update| Message::UpdateConfig(update.config))];
+
+        if self.config.auto_rotate {
+            subscriptions.push(sensor::subscription().map(Message::SensorEvent));
+        }
+
+        Subscription::batch(subscriptions)
     }
 
     fn update(&mut self, message: Self::Message) -> Task<cosmic::Action<Self::Message>> {
@@ -106,6 +150,11 @@ impl cosmic::Application for AppModel {
                 self.config.auto_rotate = enabled;
                 if let Ok(context) = cosmic_config::Config::new(Self::APP_ID, Config::VERSION) {
                     _ = self.config.write_entry(&context);
+                }
+                if !enabled {
+                    if let Some(display) = &self.display_name {
+                        let _ = rotation::apply_rotation(display, Orientation::Normal);
+                    }
                 }
             }
             Message::TogglePopup => {
@@ -133,6 +182,19 @@ impl cosmic::Application for AppModel {
                 if self.popup.as_ref() == Some(&id) {
                     self.popup = None;
                 }
+            }
+            Message::SensorEvent(SensorEvent::OrientationChanged(s)) => {
+                if let Some(orientation) = Orientation::from_sensor_string(&s) {
+                    self.orientation = orientation;
+                    if self.config.auto_rotate {
+                        if let Some(display) = &self.display_name {
+                            let _ = rotation::apply_rotation(display, orientation);
+                        }
+                    }
+                }
+            }
+            Message::SensorEvent(SensorEvent::Unavailable) => {
+                self.sensor_available = false;
             }
         }
         Task::none()
