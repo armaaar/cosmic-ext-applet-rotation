@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.github.armaaar.CosmicAppletRotation</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  <name>Screen Rotation</name>
+  <summary>Automatic screen rotation for COSMIC desktop</summary>
+  <description>
+    <p>
+      A COSMIC panel applet that automatically rotates the screen based on
+      accelerometer readings. Designed for convertible laptops and tablets
+      running the COSMIC desktop environment.
+    </p>
+    <p>Features:</p>
+    <ul>
+      <li>Automatic rotation detection via iio-sensor-proxy</li>
+      <li>Toggle to lock or unlock rotation from the system panel</li>
+      <li>Support for all four orientations (normal, left, right, upside-down)</li>
+    </ul>
+  </description>
+  <developer id="com.github.armaaar">
+    <name>armaaar</name>
+  </developer>
+  <url type="homepage">https://github.com/armaaar/cosmic-applet-rotation</url>
+  <url type="bugtracker">https://github.com/armaaar/cosmic-applet-rotation/issues</url>
+  <url type="vcs-browser">https://github.com/armaaar/cosmic-applet-rotation</url>
+  <launchable type="desktop-id">com.github.armaaar.CosmicAppletRotation.desktop</launchable>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="0.1.0" date="2026-03-24">
+      <description>
+        <p>Initial release with automatic screen rotation support.</p>
+      </description>
+    </release>
+  </releases>
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  <supports>
+    <control>pointing</control>
+    <control>touch</control>
+  </supports>
+</component>

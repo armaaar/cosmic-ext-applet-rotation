@@ -2,6 +2,18 @@
 
 use std::process::{Command, Output};
 
+/// Returns a `Command` to invoke wlr-randr, accounting for the Flatpak sandbox.
+/// Inside Flatpak, uses `flatpak-spawn --host wlr-randr` so the binary runs on the host.
+fn wlr_randr_command() -> Command {
+    if std::env::var_os("FLATPAK_ID").is_some() {
+        let mut cmd = Command::new("flatpak-spawn");
+        cmd.arg("--host").arg("wlr-randr");
+        cmd
+    } else {
+        Command::new("wlr-randr")
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Orientation {
     #[default]
@@ -42,7 +54,7 @@ impl Orientation {
 }
 
 pub fn detect_display() -> Option<String> {
-    let output = match Command::new("wlr-randr").output() {
+    let output = match wlr_randr_command().output() {
         Ok(o) => o,
         Err(e) => {
             tracing::warn!("wlr-randr not available: {e}");
@@ -67,7 +79,7 @@ pub fn parse_display_name(output: &str) -> Option<String> {
 }
 
 pub fn apply_rotation(display: &str, orientation: Orientation) -> std::io::Result<Output> {
-    let result = Command::new("wlr-randr")
+    let result = wlr_randr_command()
         .args([
             "--output",
             display,
@@ -128,6 +140,23 @@ mod tests {
         assert_eq!(Orientation::LeftUp.to_wlr_transform(), "90");
         assert_eq!(Orientation::RightUp.to_wlr_transform(), "270");
         assert_eq!(Orientation::BottomUp.to_wlr_transform(), "180");
+    }
+
+    #[test]
+    fn wlr_randr_command_native() {
+        std::env::remove_var("FLATPAK_ID");
+        let cmd = wlr_randr_command();
+        assert_eq!(cmd.get_program(), "wlr-randr");
+    }
+
+    #[test]
+    fn wlr_randr_command_flatpak() {
+        std::env::set_var("FLATPAK_ID", "com.github.armaaar.CosmicAppletRotation");
+        let cmd = wlr_randr_command();
+        assert_eq!(cmd.get_program(), "flatpak-spawn");
+        let args: Vec<_> = cmd.get_args().collect();
+        assert_eq!(args, &["--host", "wlr-randr"]);
+        std::env::remove_var("FLATPAK_ID");
     }
 
     #[test]

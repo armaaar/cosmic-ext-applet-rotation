@@ -42,3 +42,29 @@ jobs:
           files: |
             target/release/cosmic-applet-rotation
             target/debian/*.deb
+
+  flatpak:
+    name: Flatpak Bundle
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:freedesktop-24.08
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate Flatpak Cargo sources
+        run: |
+          pip install aiohttp toml
+          curl -sL -o flatpak-cargo-generator.py \
+            https://raw.githubusercontent.com/nickvdyck/flatpak-builder-tools/master/cargo/flatpak-cargo-generator.py
+          python3 flatpak-cargo-generator.py Cargo.lock -o flatpak/generated-sources.json
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          manifest-path: flatpak/com.github.armaaar.CosmicAppletRotation.yml
+          bundle: cosmic-applet-rotation.flatpak
+          cache-key: flatpak-builder-${{ github.sha }}
+      - name: Attach Flatpak to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: cosmic-applet-rotation.flatpak

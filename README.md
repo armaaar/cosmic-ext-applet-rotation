@@ -21,7 +21,7 @@ A native COSMIC panel applet for automatic screen rotation on Linux devices with
 
 ### From GitHub Releases
 
-Download the latest `.deb` package or binary from [Releases](../../releases). Tag pushes (`v*`) trigger automatic builds.
+Download the latest `.deb` package or binary from [Releases](https://github.com/armaaar/cosmic-applet-rotation/releases). Tag pushes (`v*`) trigger automatic builds.
 
 ### Building from source
 
@@ -61,6 +61,10 @@ just install          # Install to /usr/bin + desktop entry
 | Right side up   | 270°            |
 | Left side up    | 90°             |
 | Upside down     | 180°            |
+
+### Flatpak
+
+See [docs/flatpak.md](docs/flatpak.md) for local Flatpak build instructions and COSMIC Store publishing guide.
 
 ## Development
 

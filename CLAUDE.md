@@ -37,7 +37,7 @@ just quality                               # Run all checks at once
 
 - Use [Conventional Commits](https://www.conventionalcommits.org/): `type(scope): description`
   - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `ci`, `build`, `perf`
-  - Scopes (optional): `sensor`, `rotation`, `config`, `ui`, `i18n`, `ci`, `devcontainer`
+  - Scopes (optional): `sensor`, `rotation`, `config`, `ui`, `i18n`, `ci`, `devcontainer`, `flatpak`
   - Breaking changes: append `!` after type/scope (e.g., `feat!: ...`) and include `BREAKING CHANGE:` in footer
 - Follow [Semantic Versioning](https://semver.org/) (MAJOR.MINOR.PATCH):
   - `fix` → PATCH bump, `feat` → MINOR bump, breaking change → MAJOR bump
@@ -49,7 +49,7 @@ just quality                               # Run all checks at once
 - Use `cosmic::applet::run` (not `cosmic::app::run`) — this is a panel applet, not a standalone app
 - Sensor proxy lives on the **system** D-Bus bus (`zbus::Connection::system()`)
 - Must call `ClaimAccelerometer()` before reading orientation
-- Shell out to `wlr-randr` for rotation (simple, proven approach)
+- Shell out to `wlr-randr` for rotation; in Flatpak, uses `flatpak-spawn --host wlr-randr` (see `wlr_randr_command()` in `rotation.rs`)
 - Auto-detect internal display by matching `eDP*` output names
 
 ## Runtime Dependencies

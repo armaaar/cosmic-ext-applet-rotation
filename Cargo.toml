@@ -39,4 +39,5 @@ priority = "optional"
 assets = [
     ["target/release/cosmic-applet-rotation", "usr/bin/", "755"],
     ["resources/app.desktop", "usr/share/applications/com.github.armaaar.CosmicAppletRotation.desktop", "644"],
+    ["resources/com.github.armaaar.CosmicAppletRotation.metainfo.xml", "usr/share/metainfo/com.github.armaaar.CosmicAppletRotation.metainfo.xml", "644"],
 ]

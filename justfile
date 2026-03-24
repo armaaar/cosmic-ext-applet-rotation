@@ -8,6 +8,7 @@ base-dir := absolute_path(clean(rootdir / prefix))
 cargo-target-dir := env('CARGO_TARGET_DIR', 'target')
 bin-dst := base-dir / 'bin' / name
 desktop-dst := base-dir / 'share' / 'applications' / appid + '.desktop'
+metainfo-dst := base-dir / 'share' / 'metainfo' / appid + '.metainfo.xml'
 
 # Default recipe
 default: build-release
@@ -46,7 +47,8 @@ test-integration:
 install:
     install -Dm0755 {{ cargo-target-dir / 'release' / name }} {{bin-dst}}
     install -Dm0644 resources/app.desktop {{desktop-dst}}
+    install -Dm0644 resources/com.github.armaaar.CosmicAppletRotation.metainfo.xml {{metainfo-dst}}
 
 # Uninstall files
 uninstall:
-    rm -f {{bin-dst}} {{desktop-dst}}
+    rm -f {{bin-dst}} {{desktop-dst}} {{metainfo-dst}}
