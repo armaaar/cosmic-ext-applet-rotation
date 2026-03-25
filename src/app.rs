@@ -62,14 +62,24 @@ impl cosmic::Application for AppModel {
         core: cosmic::Core,
         _flags: Self::Flags,
     ) -> (Self, Task<cosmic::Action<Self::Message>>) {
-        let config = cosmic_config::Config::new(Self::APP_ID, Config::VERSION)
+        let (config, is_first_run) = cosmic_config::Config::new(Self::APP_ID, Config::VERSION)
             .map(|context| match Config::get_entry(&context) {
-                Ok(config) => config,
-                Err((_errors, config)) => config,
+                Ok(config) => (config, false),
+                Err((_errors, config)) => (config, true),
             })
-            .unwrap_or_default();
+            .unwrap_or_else(|_| (Config::default(), true));
 
         let display_name = rotation::detect_display();
+
+        // On first run, force the system state to match the default config
+        // so the applet and system are in sync from the start.
+        if is_first_run {
+            if let Some(display) = &display_name {
+                if !config.auto_rotate {
+                    let _ = rotation::apply_rotation(display, Orientation::Normal);
+                }
+            }
+        }
 
         let app = AppModel {
             core,

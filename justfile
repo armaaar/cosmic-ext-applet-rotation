@@ -9,6 +9,7 @@ cargo-target-dir := env('CARGO_TARGET_DIR', 'target')
 bin-dst := base-dir / 'bin' / name
 desktop-dst := base-dir / 'share' / 'applications' / appid + '.desktop'
 metainfo-dst := base-dir / 'share' / 'metainfo' / appid + '.metainfo.xml'
+icon-dst := base-dir / 'share' / 'icons' / 'hicolor' / 'scalable' / 'apps' / appid + '-symbolic.svg'
 
 # Default recipe
 default: build-release
@@ -48,7 +49,8 @@ install:
     install -Dm0755 {{ cargo-target-dir / 'release' / name }} {{bin-dst}}
     install -Dm0644 resources/app.desktop {{desktop-dst}}
     install -Dm0644 resources/com.github.armaaar.CosmicAppletRotation.metainfo.xml {{metainfo-dst}}
+    install -Dm0644 resources/com.github.armaaar.CosmicAppletRotation-symbolic.svg {{icon-dst}}
 
 # Uninstall files
 uninstall:
-    rm -f {{bin-dst}} {{desktop-dst}} {{metainfo-dst}}
+    rm -f {{bin-dst}} {{desktop-dst}} {{metainfo-dst}} {{icon-dst}}

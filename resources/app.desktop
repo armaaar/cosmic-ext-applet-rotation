@@ -2,11 +2,11 @@
 Type=Application
 Name=Screen Rotation
 Comment=Automatic screen rotation for devices with accelerometers
-Icon=com.github.armaaar.CosmicAppletRotation
+Icon=com.github.armaaar.CosmicAppletRotation-symbolic
 Exec=cosmic-applet-rotation
 Terminal=false
 StartupNotify=true
-Categories=COSMIC
+Categories=COSMIC;
 Keywords=COSMIC;rotation;accelerometer;tablet
 NoDisplay=true
 X-CosmicApplet=true
