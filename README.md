@@ -1,6 +1,11 @@
 # COSMIC Rotation Applet
 
-A native COSMIC panel applet for automatic screen rotation on Linux devices with accelerometers (tablets, convertibles). Monitors the accelerometer via `iio-sensor-proxy` over D-Bus and rotates the display using `wlr-randr`.
+[![CI](https://github.com/armaaar/cosmic-applet-rotation/actions/workflows/ci.yml/badge.svg)](https://github.com/armaaar/cosmic-applet-rotation/actions/workflows/ci.yml)
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
+
+A native [COSMIC](https://github.com/pop-os/cosmic-epoch) panel applet for automatic screen rotation on Linux devices with accelerometers (tablets, convertibles). Monitors the accelerometer via `iio-sensor-proxy` over D-Bus and rotates the display using `wlr-randr`.
+
+![Applet demo](resources/screenshots/demo.gif)
 
 ## Features
 
@@ -14,8 +19,24 @@ A native COSMIC panel applet for automatic screen rotation on Linux devices with
 ## Runtime Dependencies
 
 - [COSMIC desktop environment](https://github.com/pop-os/cosmic-epoch)
-- `iio-sensor-proxy` — provides accelerometer data over D-Bus
-- `wlr-randr` — applies display rotation on wlr-based Wayland compositors
+- [`iio-sensor-proxy`](https://gitlab.freedesktop.org/hadess/iio-sensor-proxy) — provides accelerometer data over D-Bus
+- [`wlr-randr`](https://sr.ht/~emersion/wlr-randr/) — applies display rotation on wlr-based Wayland compositors
+
+On Debian/Ubuntu-based systems:
+
+```bash
+sudo apt install iio-sensor-proxy wlr-randr
+```
+
+Verify your device has an accelerometer and the sensor service is running:
+
+```bash
+# Check if the sensor proxy is active
+systemctl status iio-sensor-proxy
+
+# Test accelerometer readings
+monitor-sensor
+```
 
 ## Installation
 
@@ -24,6 +45,11 @@ A native COSMIC panel applet for automatic screen rotation on Linux devices with
 Download the latest `.deb` package or binary from [Releases](https://github.com/armaaar/cosmic-applet-rotation/releases). Tag pushes (`v*`) trigger automatic builds.
 
 ### Building from source
+
+#### Prerequisites
+
+- [Rust](https://www.rust-lang.org/tools/install) (edition 2021 or later)
+- [just](https://github.com/casey/just#installation) — command runner
 
 #### Using the devcontainer (recommended)
 
@@ -86,6 +112,10 @@ git push origin v0.1.0
 ```
 
 This builds the release binary + `.deb` package and publishes them as a GitHub Release.
+
+## Contributing
+
+Contributions are welcome! Feel free to open an issue or submit a pull request.
 
 ## License
 

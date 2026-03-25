@@ -44,7 +44,7 @@ rotation.rs ──apply_rotation()──► wlr-randr --output eDP-1 --transform
 | Display detection | Auto-detect `eDP*` | Generic for laptops/tablets |
 | Config | `cosmic-config` with `auto_rotate` bool | Minimal, extensible |
 | License | GPL-3.0 | Matches COSMIC ecosystem |
-| Packaging | GitHub Releases (binary + .deb) | Simple first; Flatpak later |
+| Packaging | GitHub Releases (binary + .deb), cosmic-flatpak (Flatpak) | .deb for direct install; Flatpak via cosmic-flatpak for COSMIC Store |
 | Dev environment | Devcontainer | Zero local setup needed |
 
 ## Error Handling

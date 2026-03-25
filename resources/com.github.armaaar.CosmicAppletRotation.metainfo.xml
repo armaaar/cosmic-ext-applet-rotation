@@ -25,6 +25,20 @@
   <url type="bugtracker">https://github.com/armaaar/cosmic-applet-rotation/issues</url>
   <url type="vcs-browser">https://github.com/armaaar/cosmic-applet-rotation</url>
   <launchable type="desktop-id">com.github.armaaar.CosmicAppletRotation.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Rotation applet enabled in the COSMIC panel</caption>
+      <image>https://raw.githubusercontent.com/armaaar/cosmic-applet-rotation/main/resources/screenshots/applet-enabled.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Rotation applet disabled in the COSMIC panel</caption>
+      <image>https://raw.githubusercontent.com/armaaar/cosmic-applet-rotation/main/resources/screenshots/applet-disabled.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Automatic screen rotation demo</caption>
+      <image>https://raw.githubusercontent.com/armaaar/cosmic-applet-rotation/main/resources/screenshots/demo.gif</image>
+    </screenshot>
+  </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
     <release version="0.1.0" date="2026-03-24">
