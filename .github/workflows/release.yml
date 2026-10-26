@@ -40,5 +40,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            target/release/cosmic-applet-rotation
+            target/release/cosmic-ext-applet-rotation
             target/debian/*.deb

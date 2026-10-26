@@ -1,5 +1,5 @@
-name := 'cosmic-applet-rotation'
-appid := 'com.github.armaaar.CosmicAppletRotation'
+name := 'cosmic-ext-applet-rotation'
+appid := 'com.github.armaaar.CosmicExtAppletRotation'
 
 rootdir := ''
 prefix := '/usr'
@@ -48,8 +48,8 @@ test-integration:
 install:
     install -Dm0755 {{ cargo-target-dir / 'release' / name }} {{bin-dst}}
     install -Dm0644 resources/app.desktop {{desktop-dst}}
-    install -Dm0644 resources/com.github.armaaar.CosmicAppletRotation.metainfo.xml {{metainfo-dst}}
-    install -Dm0644 resources/com.github.armaaar.CosmicAppletRotation-symbolic.svg {{icon-dst}}
+    install -Dm0644 resources/com.github.armaaar.CosmicExtAppletRotation.metainfo.xml {{metainfo-dst}}
+    install -Dm0644 resources/com.github.armaaar.CosmicExtAppletRotation-symbolic.svg {{icon-dst}}
 
 # Uninstall files
 uninstall:

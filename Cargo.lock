@@ -817,20 +817,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cosmic-applet-rotation"
-version = "0.1.0"
-dependencies = [
- "futures-util",
- "i18n-embed",
- "i18n-embed-fl",
- "libcosmic",
- "rust-embed",
- "tokio",
- "tracing",
- "zbus",
-]
-
-[[package]]
 name = "cosmic-client-toolkit"
 version = "0.2.0"
 source = "git+https://github.com/pop-os/cosmic-protocols?rev=160b086#160b086abe03cd34a8a375d7fbe47b24308d1f38"
@@ -871,6 +857,20 @@ source = "git+https://github.com/pop-os/libcosmic.git#8e439c842ccc37a5df0821141c
 dependencies = [
  "quote",
  "syn",
+]
+
+[[package]]
+name = "cosmic-ext-applet-rotation"
+version = "0.2.0"
+dependencies = [
+ "futures-util",
+ "i18n-embed",
+ "i18n-embed-fl",
+ "libcosmic",
+ "rust-embed",
+ "tokio",
+ "tracing",
+ "zbus",
 ]
 
 [[package]]

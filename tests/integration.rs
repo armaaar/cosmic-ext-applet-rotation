@@ -88,7 +88,7 @@ fn wlr_randr_available() {
 #[test]
 #[ignore]
 fn detect_display_finds_edp() {
-    let name = cosmic_applet_rotation::rotation::detect_display();
+    let name = cosmic_ext_applet_rotation::rotation::detect_display();
     assert!(
         name.is_some(),
         "detect_display() should return Some on hardware with an eDP display"

@@ -20,11 +20,11 @@ curl -sL -o flatpak-cargo-generator.py \
 python3 flatpak-cargo-generator.py Cargo.lock -o flatpak/cargo-sources.json
 
 # Build and install (override the git source to use local files)
-flatpak-builder --user --install --force-clean build flatpak/com.github.armaaar.CosmicAppletRotation.json \
-  --override-source=cosmic-applet-rotation=type:dir,path=$(pwd)
+flatpak-builder --user --install --force-clean build flatpak/com.github.armaaar.CosmicExtAppletRotation.json \
+  --override-source=cosmic-ext-applet-rotation=type:dir,path=$(pwd)
 
 # Run
-flatpak run com.github.armaaar.CosmicAppletRotation
+flatpak run com.github.armaaar.CosmicExtAppletRotation
 ```
 
 > **Note:** Inside the Flatpak sandbox, `wlr-randr` is invoked on the host via `flatpak-spawn --host`. The host must have `wlr-randr` and `iio-sensor-proxy` installed.
@@ -40,14 +40,22 @@ The COSMIC Store discovers applets from the [cosmic-flatpak](https://github.com/
    ```bash
    python3 flatpak-cargo-generator.py Cargo.lock -o flatpak/cargo-sources.json
    ```
-3. Update the `tag` in `flatpak/com.github.armaaar.CosmicAppletRotation.json` to match the latest release tag
+3. Update the source in `flatpak/com.github.armaaar.CosmicExtAppletRotation.json` to the latest release. Use `"commit": "<sha>"` pinned to the release tag's commit, which is what currently merged apps in cosmic-flatpak do, and keep `runtime-version` on the runtime the other apps there use
 4. Open a PR to [pop-os/cosmic-flatpak](https://github.com/pop-os/cosmic-flatpak) adding:
    ```
-   app/com.github.armaaar.CosmicAppletRotation/
-   ├── com.github.armaaar.CosmicAppletRotation.json   # manifest
+   app/com.github.armaaar.CosmicExtAppletRotation/
+   ├── com.github.armaaar.CosmicExtAppletRotation.json   # manifest
    └── cargo-sources.json                              # vendored deps
    ```
 5. Reviewers will review and merge; the applet then appears in the COSMIC Store
+
+### cosmic-flatpak PR requirements (why the first submission was closed)
+
+The first submission ([pop-os/cosmic-flatpak#140](https://github.com/pop-os/cosmic-flatpak/pull/140)) was closed by a maintainer with a pointer to the [COSMIC Trademark Policy](https://github.com/pop-os/cosmic-epoch/blob/master/TRADEMARK.md). The policy reserves the `cosmic-` package namespace and `com.system76.` app IDs for official software and asks third-party applets to use `cosmic-ext-`, which is why the project was renamed in 0.2.0. When submitting:
+
+- Keep the `cosmic-ext-` name and the `CosmicExt` app ID. Describe the applet as "for the COSMIC™ desktop", not as a COSMIC applet.
+- Use the repository's PR template as-is and tick its checklist; a CI check closes PRs without it.
+- The template forbids LLM-generated content in the PR other than your own app code and manifest, including the PR description and commit message. Write those yourself.
 
 ### Optional: Community Visibility
 

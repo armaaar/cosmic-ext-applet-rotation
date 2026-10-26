@@ -151,7 +151,7 @@ mod tests {
 
     #[test]
     fn wlr_randr_command_flatpak() {
-        std::env::set_var("FLATPAK_ID", "com.github.armaaar.CosmicAppletRotation");
+        std::env::set_var("FLATPAK_ID", "com.github.armaaar.CosmicExtAppletRotation");
         let cmd = wlr_randr_command();
         assert_eq!(cmd.get_program(), "flatpak-spawn");
         let args: Vec<_> = cmd.get_args().collect();
