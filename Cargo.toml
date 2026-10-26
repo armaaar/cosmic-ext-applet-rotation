@@ -1,10 +1,10 @@
 [package]
-name = "cosmic-applet-rotation"
-version = "0.1.0"
+name = "cosmic-ext-applet-rotation"
+version = "0.2.0"
 edition = "2021"
 license = "GPL-3.0-only"
-description = "COSMIC panel applet for automatic screen rotation on devices with accelerometers"
-repository = "https://github.com/armaaar/cosmic-applet-rotation"
+description = "Panel applet for automatic screen rotation on devices with accelerometers, for the COSMIC desktop"
+repository = "https://github.com/armaaar/cosmic-ext-applet-rotation"
 
 [dependencies]
 futures-util = "0.3"
@@ -37,8 +37,8 @@ depends = "iio-sensor-proxy, wlr-randr"
 section = "x11"
 priority = "optional"
 assets = [
-    ["target/release/cosmic-applet-rotation", "usr/bin/", "755"],
-    ["resources/app.desktop", "usr/share/applications/com.github.armaaar.CosmicAppletRotation.desktop", "644"],
-    ["resources/com.github.armaaar.CosmicAppletRotation.metainfo.xml", "usr/share/metainfo/com.github.armaaar.CosmicAppletRotation.metainfo.xml", "644"],
-    ["resources/com.github.armaaar.CosmicAppletRotation-symbolic.svg", "usr/share/icons/hicolor/scalable/apps/com.github.armaaar.CosmicAppletRotation-symbolic.svg", "644"],
+    ["target/release/cosmic-ext-applet-rotation", "usr/bin/", "755"],
+    ["resources/app.desktop", "usr/share/applications/com.github.armaaar.CosmicExtAppletRotation.desktop", "644"],
+    ["resources/com.github.armaaar.CosmicExtAppletRotation.metainfo.xml", "usr/share/metainfo/com.github.armaaar.CosmicExtAppletRotation.metainfo.xml", "644"],
+    ["resources/com.github.armaaar.CosmicExtAppletRotation-symbolic.svg", "usr/share/icons/hicolor/scalable/apps/com.github.armaaar.CosmicExtAppletRotation-symbolic.svg", "644"],
 ]

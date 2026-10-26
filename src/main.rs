@@ -3,8 +3,8 @@
 mod app;
 mod config;
 mod i18n;
-use cosmic_applet_rotation::rotation;
-use cosmic_applet_rotation::sensor;
+use cosmic_ext_applet_rotation::rotation;
+use cosmic_ext_applet_rotation::sensor;
 
 fn main() -> cosmic::iced::Result {
     let requested_languages = i18n_embed::DesktopLanguageRequester::requested_languages();

@@ -1,8 +1,8 @@
-# COSMIC Rotation Applet
+# Screen Rotation applet for COSMIC™
 
 ## Overview
 
-COSMIC panel applet for automatic screen rotation on devices with accelerometers. Built with libcosmic (Rust), follows the MVU (Model-View-Update) pattern from the iced GUI framework.
+Panel applet for the COSMIC™ desktop providing automatic screen rotation on devices with accelerometers. Built with libcosmic (Rust), follows the MVU (Model-View-Update) pattern from the iced GUI framework.
 
 ## Build & Run
 

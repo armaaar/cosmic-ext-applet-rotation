@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # =============================================================================
-# Devcontainer post-create setup for cosmic-applet-rotation
+# Devcontainer post-create setup for cosmic-ext-applet-rotation
 # =============================================================================
 
 # --- System libraries required by libcosmic (the COSMIC GUI toolkit) ---------

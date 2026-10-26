@@ -1,9 +1,9 @@
-# COSMIC Rotation Applet
+# Screen Rotation applet for COSMIC™
 
-[![CI](https://github.com/armaaar/cosmic-applet-rotation/actions/workflows/ci.yml/badge.svg)](https://github.com/armaaar/cosmic-applet-rotation/actions/workflows/ci.yml)
+[![CI](https://github.com/armaaar/cosmic-ext-applet-rotation/actions/workflows/ci.yml/badge.svg)](https://github.com/armaaar/cosmic-ext-applet-rotation/actions/workflows/ci.yml)
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
-A native [COSMIC](https://github.com/pop-os/cosmic-epoch) panel applet for automatic screen rotation on Linux devices with accelerometers (tablets, convertibles). Monitors the accelerometer via `iio-sensor-proxy` over D-Bus and rotates the display using `wlr-randr`.
+A panel applet for the [COSMIC™ desktop](https://github.com/pop-os/cosmic-epoch) that provides automatic screen rotation on Linux devices with accelerometers (tablets, convertibles). Monitors the accelerometer via `iio-sensor-proxy` over D-Bus and rotates the display using `wlr-randr`.
 
 ![Applet demo](resources/screenshots/demo.gif)
 
@@ -42,7 +42,7 @@ monitor-sensor
 
 ### From GitHub Releases
 
-Download the latest `.deb` package or binary from [Releases](https://github.com/armaaar/cosmic-applet-rotation/releases). Tag pushes (`v*`) trigger automatic builds.
+Download the latest `.deb` package or binary from [Releases](https://github.com/armaaar/cosmic-ext-applet-rotation/releases). Tag pushes (`v*`) trigger automatic builds.
 
 ### Building from source
 
